@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kubernates-spring
+  name: kubernates-spring
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kubernates-spring
+  template:
+    metadata:
+      labels:
+        app: kubernates-spring
+    spec:
+      containers:
+        - name: kubernates-spring
+          image: kubernates-spring
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          volumeMounts:
+            - name: config-volume
+              mountPath: /workspace/config
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: kubernates-spring
+            items:
+              - key: application.properties
+                path: application.properties

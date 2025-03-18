@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernates-spring
+spec:
+  selector:
+    app: kubernates-spring
+  ports:
+    - name: http # Tên cổng bắt buộc
+      protocol: TCP
+      port: 80        # Cổng bên ngoài service
+      targetPort: 8080 # Cổng container
+  type: ClusterIP
